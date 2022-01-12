@@ -1,0 +1,12 @@
+﻿<Sql TableName="LPOrder" TableSchemaXml="#CDATA">
+    <CDATA name="TableSchemaXml"><![CDATA[<table name="LPOrder">
+  <col name="ID" type="Int" identity="true" />
+  <col name="CompanyID" type="Int" default="Zero" />
+  <col name="OrderNbr" type="NVarChar(10)" />
+  <col name="OrderDate" type="DateTime" />
+  <index name="PK_LPOrder" clustered="true" primary="true" unique="true">
+    <col name="ID" />
+    <col name="CompanyID" />
+  </index>
+</table>]]></CDATA>
+</Sql>
