@@ -113,14 +113,12 @@ namespace LongOperations
 
         private static void DoTest4RefreshUI(LongOperationSamples graphCopy)
         {
-            //Add new Orderline 
-            var row = graphCopy.DetailsView.Insert();
+            var row = new LPOrderLine();
             InventoryItem inventory = SelectFrom<InventoryItem>.Where<InventoryItem.inventoryCD.IsEqual<@P.AsString>>
                 .View.Select(graphCopy, "AACOMPUT01");
             row.InventoryID = inventory?.InventoryID;
             row.OrderQty = 10M;
             row.OrderAmt = 100M;
-            graphCopy.DetailsView.Update(row);
 
             //Put Orderline in Custom Info Persistent
             PXLongOperation.SetCustomInfoPersistent(row);
@@ -145,9 +143,6 @@ namespace LongOperations
             //Simulate long operation
             Thread.Sleep(2000);
             
-            //Prepare data in custom info persistent (to be populated at a later stage)
-            PXLongOperation.SetCustomInfoPersistent(new LPOrderLine());
-
             //Register Custom Info which would call another action on another graph
             PXLongOperation.SetCustomInfo(new NestedActionCustomInfo());
         }       
@@ -166,12 +161,6 @@ namespace LongOperations
                 additionalGraph.additionalAction.Press();
                 //Since this action, uses a long operation, we will wait for it to be completed before proceeding
                 PXLongOperation.WaitCompletion(additionalGraph.UID);
-
-                //Update custom info based of the action (which would have been updated in the Current row)
-                var line = PXLongOperation.GetCustomInfoPersistent(graph.UID) as LPOrderLine;
-                line.InventoryID = additionalGraph.OrderLine.Current.InventoryID;
-                line.OrderQty    = additionalGraph.OrderLine.Current.OrderQty;
-                line.OrderAmt    = additionalGraph.OrderLine.Current.OrderAmt;
             }
         }
     }    
